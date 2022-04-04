@@ -1,14 +1,20 @@
-const   uuid   = require('uuid'),
+const   uuid   = require('uuid/v4'),
         fs      = require('fs'),
         path    = require('path');
+
+// const randId = Math.floor(Math.random() * 10022233);
+
+// console.log(uuid.v4.randId);
+
+// Todo: узнать uuid как пользоватьс я этой библиотекой и стравнить версии чем отличаеться 8 версия от 3 может самому рандом число написать
 
 
 class Course {
     constructor(title, price, img) {
         this.title = title,
         this.price = price,
-        this.img = img
-        this.id = uuid.id
+        this.img = img,
+        this.id = uuid()
     }
 
     toJSON() {
@@ -24,32 +30,32 @@ class Course {
         const courses = await Course.getAll()
         courses.push(this.toJSON())
         
-        // return new Promise((resolve, reject) => {
-        //     fs.writeFile(
-        //         path.join(__dirname, '..', 'data', 'courses.json'),
-        //         JSON.stringify(courses),
-        //         (err) => {
-        //             if(err) {
-        //                 reject(err)
-        //             } else {
-        //                 resolve()
-        //             }
-        //         }
-        //     )
-        // })
         return new Promise((resolve, reject) => {
             fs.writeFile(
-              path.join(__dirname, '..', 'data', 'courses.json'),
-              JSON.stringify(courses),
-              (err) => {
-                if (err) {
-                  reject(err)
-                } else {
-                  resolve()
+                path.join(__dirname, '..', 'data', 'courses.json'),
+                JSON.stringify(courses),
+                (err) => {
+                    if(err) {
+                        reject(err)
+                    } else {
+                        resolve()
+                    }
                 }
-              }
             )
-          })
+        })
+        // return new Promise((resolve, reject) => {
+        //     fs.writeFile(
+        //       path.join(__dirname, '..', 'data', 'courses.json'),
+        //       JSON.stringify(courses),
+        //       (err) => {
+        //         if (err) {
+        //           reject(err)
+        //         } else {
+        //           resolve()
+        //         }
+        //       }
+        //     )
+        //   })
     }
 
     static getAll() {
@@ -67,6 +73,11 @@ class Course {
             )
         })
         
+    }
+
+    static async getById(id) {
+        const courses = await Course.getAll()
+        return courses.find(c => c.id === id)
     }
 }
 
