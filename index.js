@@ -14,6 +14,12 @@ const express = require('express'),
 //     })
 // )
 
+const   homeRoutes = require('./routes/home'),
+        aboutRoutes = require('./routes/about')
+        coursesRoutes = require('./routes/courses'),
+        addRoutes = require('./routes/add')
+
+
 const app = express()
 
 const hbs = exphbs.create({
@@ -27,41 +33,19 @@ app.set('view engine', 'hbs')
 // app.set('view engine', 'pug')
 // app.set('view engine', 'ejs')
 
-app.use(express.static('public'))
-
 app.set('views', 'views')
+
+app.use(express.static('public'))
+app.use(express.urlencoded({ extended: true }))
+
+app.use('/', homeRoutes)
+app.use('/about', aboutRoutes)
+app.use('/courses', coursesRoutes)
+app.use('/add', addRoutes)
 
 
 
 const PORT = process.env.PORT || 3000
-
-app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'Home',
-        isHome: true
-    })
-})
-
-app.get('/about', (req, res) => {
-    res.render('about', {
-        title: 'About',
-        isAbout: true
-    })
-})
-
-app.get('/courses', (req, res) => {
-    res.render('courses', {
-        title: 'Courses',
-        isCourses: true
-    })
-})
-
-app.get('/add', (req, res) => {
-    res.render('add', {
-        title: 'Add courses',
-        isAdd: true
-    })
-})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
